@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Kulzzy Celebrant Slider</title>
 
 <style>
+
+/* =========================================
+   BASIC RESET
+========================================= */
+
 * {
     box-sizing: border-box;
 }
@@ -20,215 +31,989 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+
+/* =========================================
+   MAIN SLIDER
+========================================= */
+
 .celebrant-slider {
-    width: 100%;
-    max-width: 420px;
-    height: 210px;
-    margin: 0 auto;
+
     position: relative;
+
+    width: 100%;
+
+    max-width: 420px;
+
+    height: 210px;
+
+    margin: 0 auto;
+
     overflow: hidden;
+
     border-radius: 12px;
+
     background: #07152f;
+
+    display: none;
+
 }
+
+
+/* =========================================
+   SLIDE
+========================================= */
 
 .slide {
+
     position: absolute;
+
     inset: 0;
+
     width: 100%;
+
     height: 100%;
+
     opacity: 0;
-    transform: scale(1.02);
+
+    visibility: hidden;
+
+    transform: scale(1.03);
+
     transition:
         opacity 0.8s ease,
-        transform 4s ease;
+        transform 4s ease,
+        visibility 0.8s ease;
+
 }
+
 
 .slide.active {
+
     opacity: 1;
+
+    visibility: visible;
+
     transform: scale(1);
+
 }
+
+
+/* =========================================
+   CELEBRANT IMAGE
+
+   TOP POSITION IS IMPORTANT:
+   It helps protect the person's head
+   from being cropped.
+========================================= */
 
 .slide img {
+
     width: 100%;
+
     height: 100%;
+
     display: block;
+
     object-fit: cover;
+
     object-position: center top;
+
 }
 
-.slide-overlay {
+
+/* =========================================
+   DARK IMAGE OVERLAY
+========================================= */
+
+.slide::after {
+
+    content: "";
+
     position: absolute;
+
     left: 0;
+
     right: 0;
+
     bottom: 0;
-    padding: 35px 15px 13px;
-    background: linear-gradient(
-        transparent,
-        rgba(0, 0, 0, 0.85)
-    );
+
+    height: 45%;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent,
+            rgba(0, 0, 0, 0.85)
+        );
+
+    pointer-events: none;
+
 }
+
+
+/* =========================================
+   CELEBRANT INFORMATION
+========================================= */
+
+.slide-info {
+
+    position: absolute;
+
+    left: 0;
+
+    right: 0;
+
+    bottom: 0;
+
+    z-index: 3;
+
+    padding:
+        35px
+        14px
+        14px;
+
+}
+
 
 .celebrant-name {
+
     margin: 0;
+
     color: #ffffff;
+
     font-size: 20px;
-    font-weight: 800;
-    line-height: 1.1;
-    text-align: left;
+
+    line-height: 1.15;
+
+    font-weight: 900;
+
+    text-shadow:
+        0 2px 5px rgba(0,0,0,0.8);
+
 }
 
-.celebrant-message {
-    margin: 5px 0 0;
-    color: #ffd21c;
-    font-size: 13px;
-    font-weight: 600;
+
+/* =========================================
+   KULZZY LABEL
+========================================= */
+
+.kulzzy-label {
+
+    display: inline-block;
+
+    margin-top: 6px;
+
+    padding: 4px 8px;
+
+    border-radius: 5px;
+
+    background: #ffd21c;
+
+    color: #07152f;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+
 }
+
+
+/* =========================================
+   DOTS
+========================================= */
 
 .slider-dots {
+
     position: absolute;
-    bottom: 9px;
+
     right: 12px;
-    display: flex;
-    gap: 5px;
+
+    bottom: 12px;
+
     z-index: 10;
+
+    display: flex;
+
+    gap: 5px;
+
 }
+
 
 .dot {
+
     width: 6px;
+
     height: 6px;
+
     border-radius: 50%;
-    background: rgba(255,255,255,0.55);
+
+    background:
+        rgba(255,255,255,0.55);
+
+    transition:
+        all 0.3s ease;
+
 }
+
 
 .dot.active {
+
     background: #ffd21c;
-    transform: scale(1.2);
+
+    transform: scale(1.3);
+
 }
 
-.empty-message {
+
+/* =========================================
+   LOADING
+========================================= */
+
+.loading {
+
     width: 100%;
-    height: 100%;
+
+    max-width: 420px;
+
+    height: 210px;
+
+    margin: 0 auto;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
-    text-align: center;
-    padding: 20px;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
+
+    background: #07152f;
+
+    border-radius: 12px;
+
+    color: #ffd21c;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
 }
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 500px) {
+
+    .celebrant-slider {
+
+        height: 210px;
+
+        border-radius: 10px;
+
+    }
+
+    .loading {
+
+        height: 210px;
+
+    }
+
+    .celebrant-name {
+
+        font-size: 18px;
+
+    }
+
+}
+
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 360px) {
+
+    .celebrant-slider {
+
+        height: 190px;
+
+    }
+
+    .loading {
+
+        height: 190px;
+
+    }
+
+    .celebrant-name {
+
+        font-size: 17px;
+
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
-<div class="celebrant-slider" id="celebrantSlider">
 
-    <!--
-        TEMPORARY TEST SLIDES
+<!-- ======================================
+     LOADING
+======================================= -->
 
-        These will later be replaced automatically
-        by pictures uploaded through the admin panel.
-    -->
+<div
+    class="loading"
+    id="loading"
+>
+    🎉 Loading today's celebrants...
+</div>
 
-    <div class="slide active">
-        <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85"
-            alt="Celebrant">
-        <div class="slide-overlay">
-            <h2 class="celebrant-name">
-                HAPPY BIRTHDAY!
-            </h2>
-            <p class="celebrant-message">
-                Celebrating Lives Everyday
-            </p>
-        </div>
-    </div>
 
-    <div class="slide">
-        <img
-            src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=85"
-            alt="Celebrant">
-        <div class="slide-overlay">
-            <h2 class="celebrant-name">
-                TODAY'S CELEBRANT
-            </h2>
-            <p class="celebrant-message">
-                Celebrating with Kulzzy Radio
-            </p>
-        </div>
-    </div>
+<!-- ======================================
+     SLIDER
+======================================= -->
 
-    <div class="slide">
-        <img
-            src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=85"
-            alt="Celebrant">
-        <div class="slide-overlay">
-            <h2 class="celebrant-name">
-                CELEBRATE WITH US!
-            </h2>
-            <p class="celebrant-message">
-                Kulzzy Radio Network
-            </p>
-        </div>
-    </div>
+<div
+    class="celebrant-slider"
+    id="celebrantSlider"
+>
 
-    <div class="slider-dots" id="sliderDots"></div>
+    <div
+        id="slidesContainer"
+    ></div>
+
+
+    <div
+        class="slider-dots"
+        id="sliderDots"
+    ></div>
 
 </div>
 
-<script>
-const slides = document.querySelectorAll(".slide");
-const dotsContainer = document.getElementById("sliderDots");
+
+<script type="module">
+
+
+/* =========================================
+   FIREBASE IMPORT
+========================================= */
+
+import {
+
+    initializeApp
+
+} from
+"https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+
+
+import {
+
+    getFirestore,
+
+    collection,
+
+    getDocs
+
+} from
+"https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+
+/* =========================================
+   FIREBASE CONFIGURATION
+========================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDHI9tGBt_B5yCK45K-angMPwTlUwTrfIQ",
+
+    authDomain:
+        "kulzzy-celebrant-slider.firebaseapp.com",
+
+    projectId:
+        "kulzzy-celebrant-slider",
+
+    storageBucket:
+        "kulzzy-celebrant-slider.firebasestorage.app",
+
+    messagingSenderId:
+        "109098527853",
+
+    appId:
+        "1:109098527853:web:79613ac1407856f112e364",
+
+    measurementId:
+        "G-7Z0WJFH5X0"
+
+};
+
+
+/* =========================================
+   START FIREBASE
+========================================= */
+
+const app =
+    initializeApp(
+        firebaseConfig
+    );
+
+
+const db =
+    getFirestore(app);
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const slider =
+    document.getElementById(
+        "celebrantSlider"
+    );
+
+
+const loading =
+    document.getElementById(
+        "loading"
+    );
+
+
+const slidesContainer =
+    document.getElementById(
+        "slidesContainer"
+    );
+
+
+const dotsContainer =
+    document.getElementById(
+        "sliderDots"
+    );
+
+
+/* =========================================
+   SLIDER VARIABLES
+========================================= */
+
+let slides = [];
+
+let dots = [];
 
 let currentSlide = 0;
 
-/* Create dots */
-slides.forEach((slide, index) => {
-    const dot = document.createElement("div");
+let slideTimer = null;
 
-    dot.className = "dot";
 
-    if (index === 0) {
-        dot.classList.add("active");
+/* =========================================
+   LOAD CELEBRANTS
+========================================= */
+
+async function loadCelebrants() {
+
+    try {
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "celebrants"
+                )
+            );
+
+
+        const now =
+            Date.now();
+
+
+        const activeCelebrants = [];
+
+
+        snapshot.forEach(
+            function(doc) {
+
+                const data =
+                    doc.data();
+
+
+                /*
+                 * Only accept records that
+                 * have an expiry time.
+                 */
+
+                if (
+                    !data.expiresAt ||
+                    !data.images ||
+                    !Array.isArray(data.images)
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                 * 24-HOUR EXPIRATION
+                 */
+
+                if (
+                    Number(data.expiresAt) <= now
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                 * Published must be true.
+                 */
+
+                if (
+                    data.published !== true
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                 * Add active celebrant.
+                 */
+
+                activeCelebrants.push(
+                    data
+                );
+
+            }
+        );
+
+
+        /*
+         * Clear current content.
+         */
+
+        slidesContainer.innerHTML = "";
+
+        dotsContainer.innerHTML = "";
+
+        slides = [];
+
+        dots = [];
+
+        currentSlide = 0;
+
+
+        /*
+         * No active celebrants.
+         */
+
+        if (
+            activeCelebrants.length === 0
+        ) {
+
+            slider.style.display = "none";
+
+            loading.style.display = "none";
+
+            stopSlider();
+
+            return;
+
+        }
+
+
+        /*
+         * Create slides.
+         */
+
+        activeCelebrants.forEach(
+            function(celebrant) {
+
+                const name =
+                    celebrant.name ||
+                    "Today's Celebrant";
+
+
+                celebrant.images.forEach(
+                    function(imageUrl) {
+
+                        if (
+                            !imageUrl ||
+                            typeof imageUrl !== "string"
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        createSlide(
+                            imageUrl,
+                            name
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+        /*
+         * Get the final slides.
+         */
+
+        slides =
+            Array.from(
+                document.querySelectorAll(
+                    ".slide"
+                )
+            );
+
+
+        dots =
+            Array.from(
+                document.querySelectorAll(
+                    ".dot"
+                )
+            );
+
+
+        /*
+         * Show slider.
+         */
+
+        if (
+            slides.length > 0
+        ) {
+
+            loading.style.display =
+                "none";
+
+            slider.style.display =
+                "block";
+
+            showSlide(0);
+
+            startSlider();
+
+        } else {
+
+            slider.style.display =
+                "none";
+
+            loading.style.display =
+                "none";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Celebrant loading error:",
+            error
+        );
+
+
+        slider.style.display =
+            "none";
+
+        loading.style.display =
+            "none";
+
     }
 
-    dotsContainer.appendChild(dot);
-});
-
-/* Get dots */
-const dots = document.querySelectorAll(".dot");
-
-/* Change slide */
-function showSlide(index) {
-
-    slides.forEach(slide => {
-        slide.classList.remove("active");
-    });
-
-    dots.forEach(dot => {
-        dot.classList.remove("active");
-    });
-
-    slides[index].classList.add("active");
-    dots[index].classList.add("active");
-
-    currentSlide = index;
 }
 
-/* Automatic sliding */
-setInterval(() => {
 
-    let nextSlide = currentSlide + 1;
+/* =========================================
+   CREATE SLIDE
+========================================= */
 
-    if (nextSlide >= slides.length) {
-        nextSlide = 0;
+function createSlide(
+    imageUrl,
+    name
+) {
+
+    const slide =
+        document.createElement(
+            "div"
+        );
+
+
+    slide.className =
+        "slide";
+
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+
+    image.src =
+        imageUrl;
+
+
+    image.alt =
+        name;
+
+
+    image.loading =
+        "lazy";
+
+
+    /*
+     * Keep head toward the top.
+     */
+
+    image.style.objectPosition =
+        "center top";
+
+
+    const info =
+        document.createElement(
+            "div"
+        );
+
+
+    info.className =
+        "slide-info";
+
+
+    const title =
+        document.createElement(
+            "h2"
+        );
+
+
+    title.className =
+        "celebrant-name";
+
+
+    title.textContent =
+        name;
+
+
+    const label =
+        document.createElement(
+            "span"
+        );
+
+
+    label.className =
+        "kulzzy-label";
+
+
+    label.textContent =
+        "Kulzzy Radio";
+
+
+    info.appendChild(
+        title
+    );
+
+
+    info.appendChild(
+        label
+    );
+
+
+    slide.appendChild(
+        image
+    );
+
+
+    slide.appendChild(
+        info
+    );
+
+
+    slidesContainer.appendChild(
+        slide
+    );
+
+
+    /*
+     * Create navigation dot.
+     */
+
+    const dot =
+        document.createElement(
+            "div"
+        );
+
+
+    dot.className =
+        "dot";
+
+
+    dotsContainer.appendChild(
+        dot
+    );
+
+}
+
+
+/* =========================================
+   SHOW SLIDE
+========================================= */
+
+function showSlide(index) {
+
+    if (
+        slides.length === 0
+    ) {
+
+        return;
+
     }
 
-    showSlide(nextSlide);
 
-}, 4000);
+    slides.forEach(
+        function(slide) {
+
+            slide.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+
+    dots.forEach(
+        function(dot) {
+
+            dot.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+
+    slides[index].classList.add(
+        "active"
+    );
+
+
+    if (
+        dots[index]
+    ) {
+
+        dots[index].classList.add(
+            "active"
+        );
+
+    }
+
+
+    currentSlide =
+        index;
+
+}
+
+
+/* =========================================
+   START AUTOMATIC SLIDER
+========================================= */
+
+function startSlider() {
+
+    stopSlider();
+
+
+    if (
+        slides.length <= 1
+    ) {
+
+        return;
+
+    }
+
+
+    slideTimer =
+        setInterval(
+            function() {
+
+                let next =
+                    currentSlide + 1;
+
+
+                if (
+                    next >= slides.length
+                ) {
+
+                    next = 0;
+
+                }
+
+
+                showSlide(
+                    next
+                );
+
+
+            },
+            4000
+        );
+
+}
+
+
+/* =========================================
+   STOP SLIDER
+========================================= */
+
+function stopSlider() {
+
+    if (
+        slideTimer
+    ) {
+
+        clearInterval(
+            slideTimer
+        );
+
+        slideTimer =
+            null;
+
+    }
+
+}
+
+
+/* =========================================
+   FIRST LOAD
+========================================= */
+
+loadCelebrants();
+
+
+/* =========================================
+   CHECK FOR NEW/EXPIRED CELEBRANTS
+   EVERY 60 SECONDS
+========================================= */
+
+setInterval(
+    function() {
+
+        loadCelebrants();
+
+    },
+    60000
+);
+
+
 </script>
 
 </body>
-  </html>
+
+</html>
