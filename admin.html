@@ -21,7 +21,7 @@ body {
 
 .admin-box {
     width: 100%;
-    max-width: 500px;
+    max-width: 520px;
     margin: 0 auto;
     background: #0d2145;
     padding: 22px;
@@ -31,104 +31,142 @@ body {
 
 .logo {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .logo h1 {
     margin: 0;
     color: #ffd21c;
     font-size: 25px;
+    font-weight: 900;
 }
 
 .logo p {
     margin: 7px 0 0;
-    color: #d8d8d8;
+    color: #d7dce6;
     font-size: 13px;
 }
 
-label {
+.upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    padding: 20px;
+    border: 2px dashed #ffd21c;
+    border-radius: 12px;
+    background: rgba(255,210,28,0.05);
+    color: #ffd21c;
+    font-size: 16px;
+    font-weight: 800;
+    text-align: center;
+    cursor: pointer;
+}
+
+#photoInput {
+    display: none;
+}
+
+.preview-title {
+    display: none;
+    margin: 18px 0 10px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffd21c;
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.preview-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #061127;
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
     display: block;
-    margin: 16px 0 7px;
+}
+
+label.field-label {
+    display: block;
+    margin: 18px 0 7px;
     font-size: 14px;
     font-weight: 700;
 }
 
-input,
-textarea {
+input[type="text"] {
     width: 100%;
-    padding: 13px;
+    padding: 14px;
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 9px;
     outline: none;
     background: #07152f;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 15px;
 }
 
-textarea {
-    min-height: 90px;
-    resize: vertical;
-}
-
-input:focus,
-textarea:focus {
+input[type="text"]:focus {
     border-color: #ffd21c;
-}
-
-.preview {
-    width: 100%;
-    height: 210px;
-    margin-top: 15px;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #061127;
-    display: none;
-}
-
-.preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
 }
 
 .publish-btn {
     width: 100%;
     margin-top: 20px;
-    padding: 14px;
+    padding: 15px;
     border: none;
     border-radius: 9px;
     background: #ffd21c;
     color: #07152f;
     font-size: 16px;
-    font-weight: 800;
+    font-weight: 900;
     cursor: pointer;
 }
 
 .publish-btn:disabled {
-    opacity: 0.6;
+    opacity: 0.55;
     cursor: not-allowed;
 }
 
 .message {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 8px;
     display: none;
+    margin-top: 15px;
+    padding: 13px;
+    border-radius: 9px;
     text-align: center;
     font-size: 14px;
+    line-height: 1.4;
 }
 
-.success {
+.message.success {
     display: block;
     background: rgba(40,180,90,0.15);
     color: #7dffab;
 }
 
-.error {
+.message.error {
     display: block;
     background: rgba(255,60,60,0.15);
     color: #ff9b9b;
+}
+
+.progress {
+    display: none;
+    margin-top: 12px;
+    text-align: center;
+    color: #ffd21c;
+    font-size: 13px;
+    font-weight: 700;
 }
 </style>
 </head>
@@ -142,38 +180,66 @@ textarea:focus {
         <p>Celebrant Slider Admin Panel</p>
     </div>
 
-    <label for="name">
+    <!-- PHOTO SELECTOR -->
+
+    <label
+        for="photoInput"
+        class="upload-label"
+    >
+        📸 SELECT CELEBRANT PICTURES
+        <br>
+        <small style="display:block;margin-top:7px;color:#ffffff;">
+            Select one or multiple pictures from your phone
+        </small>
+    </label>
+
+    <input
+        type="file"
+        id="photoInput"
+        accept="image/*"
+        multiple
+    >
+
+    <!-- PREVIEW -->
+
+    <div
+        class="preview-title"
+        id="previewTitle"
+    >
+        🖼️ SELECTED PICTURES
+    </div>
+
+    <div
+        class="preview-grid"
+        id="previewGrid"
+    ></div>
+
+    <!-- NAME -->
+
+    <label
+        for="celebrantName"
+        class="field-label"
+    >
         Celebrant Name
     </label>
 
     <input
         type="text"
-        id="name"
+        id="celebrantName"
         placeholder="Enter celebrant name"
+        autocomplete="off"
     >
 
-    <label for="message">
-        Celebration Message
-    </label>
+    <!-- PROGRESS -->
 
-    <textarea
-        id="message"
-        placeholder="Example: Happy Birthday from everyone at Kulzzy Radio Network!"
-    ></textarea>
-
-    <label for="imageUrl">
-        Celebrant Picture URL
-    </label>
-
-    <input
-        type="url"
-        id="imageUrl"
-        placeholder="Paste the direct image URL here"
+    <div
+        class="progress"
+        id="progress"
     >
-
-    <div class="preview" id="preview">
-        <img id="previewImage" src="" alt="Picture preview">
+        Uploading pictures...
     </div>
+
+    <!-- PUBLISH -->
 
     <button
         class="publish-btn"
@@ -189,7 +255,12 @@ textarea:focus {
 
 </div>
 
+
 <script type="module">
+
+/* =========================================
+   FIREBASE
+========================================= */
 
 import {
     initializeApp
@@ -203,13 +274,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 
-/* ==============================
-   FIREBASE CONFIGURATION
-================================ */
-
 const firebaseConfig = {
 
-    apiKey: "AIzaSyDHI9tGBt_B5yCK45K-angMPwTlUwTrfIQ",
+    apiKey:
+        "AIzaSyDHI9tGBt_B5yCK45K-angMPwTlUwTrfIQ",
 
     authDomain:
         "kulzzy-celebrant-slider.firebaseapp.com",
@@ -231,33 +299,39 @@ const firebaseConfig = {
 };
 
 
-/* ==============================
-   INITIALIZE FIREBASE
-================================ */
+const app =
+    initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
+const db =
+    getFirestore(app);
 
 
-/* ==============================
+/* =========================================
+   CLOUDINARY
+========================================= */
+
+const CLOUD_NAME =
+    "s4j0x7dk";
+
+const UPLOAD_PRESET =
+    "kulzzy_celebrants";
+
+
+/* =========================================
    ELEMENTS
-================================ */
+========================================= */
 
-const nameInput =
-    document.getElementById("name");
+const photoInput =
+    document.getElementById("photoInput");
 
-const messageInput =
-    document.getElementById("message");
+const previewGrid =
+    document.getElementById("previewGrid");
 
-const imageUrlInput =
-    document.getElementById("imageUrl");
+const previewTitle =
+    document.getElementById("previewTitle");
 
-const preview =
-    document.getElementById("preview");
-
-const previewImage =
-    document.getElementById("previewImage");
+const celebrantName =
+    document.getElementById("celebrantName");
 
 const publishBtn =
     document.getElementById("publishBtn");
@@ -265,84 +339,175 @@ const publishBtn =
 const statusMessage =
     document.getElementById("statusMessage");
 
+const progress =
+    document.getElementById("progress");
 
-/* ==============================
-   IMAGE PREVIEW
-================================ */
 
-imageUrlInput.addEventListener(
-    "input",
+let selectedFiles = [];
+
+
+/* =========================================
+   SELECT PICTURES
+========================================= */
+
+photoInput.addEventListener(
+    "change",
     function() {
 
-        const url =
-            imageUrlInput.value.trim();
+        selectedFiles =
+            Array.from(photoInput.files);
 
-        if (!url) {
+        showPreviews();
 
-            preview.style.display = "none";
+    }
+);
 
-            previewImage.src = "";
 
-            return;
+/* =========================================
+   PREVIEW
+========================================= */
+
+function showPreviews() {
+
+    previewGrid.innerHTML = "";
+
+    if (selectedFiles.length === 0) {
+
+        previewTitle.style.display = "none";
+
+        return;
+    }
+
+    previewTitle.style.display = "block";
+
+
+    selectedFiles.forEach(
+        function(file) {
+
+            const reader =
+                new FileReader();
+
+            reader.onload =
+                function(event) {
+
+                    const item =
+                        document.createElement("div");
+
+                    item.className =
+                        "preview-item";
+
+
+                    const img =
+                        document.createElement("img");
+
+                    img.src =
+                        event.target.result;
+
+                    img.alt =
+                        "Celebrant picture";
+
+
+                    item.appendChild(img);
+
+                    previewGrid.appendChild(item);
+
+                };
+
+
+            reader.readAsDataURL(file);
+
         }
-
-        previewImage.src = url;
-
-        preview.style.display = "block";
-    }
-);
+    );
+}
 
 
-/* ==============================
-   IMAGE ERROR
-================================ */
-
-previewImage.addEventListener(
-    "error",
-    function() {
-
-        preview.style.display = "none";
-
-        showMessage(
-            "The image URL could not be loaded.",
-            "error"
-        );
-    }
-);
-
-
-/* ==============================
-   SHOW MESSAGE
-================================ */
+/* =========================================
+   MESSAGE
+========================================= */
 
 function showMessage(
     text,
     type
 ) {
 
-    statusMessage.textContent = text;
+    statusMessage.textContent =
+        text;
 
     statusMessage.className =
         "message " + type;
 }
 
 
-/* ==============================
+/* =========================================
+   UPLOAD ONE IMAGE
+========================================= */
+
+async function uploadToCloudinary(
+    file
+) {
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        file
+    );
+
+    formData.append(
+        "upload_preset",
+        UPLOAD_PRESET
+    );
+
+
+    const response =
+        await fetch(
+            `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Cloudinary upload failed."
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    return data.secure_url;
+}
+
+
+/* =========================================
    PUBLISH
-================================ */
+========================================= */
 
 publishBtn.addEventListener(
     "click",
     async function() {
 
         const name =
-            nameInput.value.trim();
+            celebrantName.value.trim();
 
-        const message =
-            messageInput.value.trim();
 
-        const imageUrl =
-            imageUrlInput.value.trim();
+        if (selectedFiles.length === 0) {
+
+            showMessage(
+                "Please select at least one celebrant picture.",
+                "error"
+            );
+
+            return;
+        }
 
 
         if (!name) {
@@ -356,24 +521,61 @@ publishBtn.addEventListener(
         }
 
 
-        if (!imageUrl) {
-
-            showMessage(
-                "Please enter the picture URL.",
-                "error"
-            );
-
-            return;
-        }
-
-
         publishBtn.disabled = true;
 
         publishBtn.textContent =
-            "PUBLISHING...";
+            "UPLOADING...";
+
+        progress.style.display =
+            "block";
 
 
         try {
+
+            const imageUrls = [];
+
+
+            /* ============================
+               UPLOAD ALL PICTURES
+            ============================ */
+
+            for (
+                let i = 0;
+                i < selectedFiles.length;
+                i++
+            ) {
+
+                progress.textContent =
+                    `Uploading picture ${i + 1} of ${selectedFiles.length}...`;
+
+
+                const imageUrl =
+                    await uploadToCloudinary(
+                        selectedFiles[i]
+                    );
+
+
+                imageUrls.push(
+                    imageUrl
+                );
+
+            }
+
+
+            /* ============================
+               24 HOUR EXPIRATION
+            ============================ */
+
+            const now =
+                Date.now();
+
+            const expiresAt =
+                now + (24 * 60 * 60 * 1000);
+
+
+            /* ============================
+               SAVE TO FIRESTORE
+            ============================ */
 
             await addDoc(
                 collection(
@@ -384,33 +586,41 @@ publishBtn.addEventListener(
 
                     name: name,
 
-                    message: message,
-
-                    imageUrl: imageUrl,
+                    images: imageUrls,
 
                     published: true,
 
+                    publishedAt: now,
+
+                    expiresAt: expiresAt,
+
                     createdAt:
                         serverTimestamp()
+
                 }
             );
 
 
+            /* ============================
+               SUCCESS
+            ============================ */
+
             showMessage(
-                "🎉 Celebrant published successfully!",
+                "🎉 Celebrant published successfully! The pictures will remain live for 24 hours.",
                 "success"
             );
 
 
-            nameInput.value = "";
+            selectedFiles = [];
 
-            messageInput.value = "";
+            photoInput.value = "";
 
-            imageUrlInput.value = "";
+            previewGrid.innerHTML = "";
 
-            preview.style.display = "none";
+            previewTitle.style.display =
+                "none";
 
-            previewImage.src = "";
+            celebrantName.value = "";
 
 
         } catch (error) {
@@ -418,7 +628,7 @@ publishBtn.addEventListener(
             console.error(error);
 
             showMessage(
-                "Unable to publish. Check your Firebase setup and rules.",
+                "Something went wrong while publishing. Please try again.",
                 "error"
             );
 
@@ -429,6 +639,10 @@ publishBtn.addEventListener(
 
         publishBtn.textContent =
             "🎉 PUBLISH CELEBRANT";
+
+        progress.style.display =
+            "none";
+
     }
 );
 
