@@ -24,11 +24,20 @@
 
 html,
 body {
+
     margin: 0;
+
     padding: 0;
+
     width: 100%;
+
     background: transparent;
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
 }
 
 
@@ -101,9 +110,7 @@ body {
 /* =========================================
    CELEBRANT IMAGE
 
-   TOP POSITION IS IMPORTANT:
-   It helps protect the person's head
-   from being cropped.
+   TOP POSITION PROTECTS THE HEAD
 ========================================= */
 
 .slide img {
@@ -122,7 +129,7 @@ body {
 
 
 /* =========================================
-   DARK IMAGE OVERLAY
+   IMAGE OVERLAY
 ========================================= */
 
 .slide::after {
@@ -203,7 +210,8 @@ body {
 
     margin-top: 6px;
 
-    padding: 4px 8px;
+    padding:
+        4px 8px;
 
     border-radius: 5px;
 
@@ -314,11 +322,13 @@ body {
 
     }
 
+
     .loading {
 
         height: 210px;
 
     }
+
 
     .celebrant-name {
 
@@ -341,11 +351,13 @@ body {
 
     }
 
+
     .loading {
 
         height: 190px;
 
     }
+
 
     .celebrant-name {
 
@@ -401,7 +413,7 @@ body {
 
 
 /* =========================================
-   FIREBASE IMPORT
+   FIREBASE
 ========================================= */
 
 import {
@@ -425,7 +437,7 @@ import {
 
 
 /* =========================================
-   FIREBASE CONFIGURATION
+   FIREBASE CONFIG
 ========================================= */
 
 const firebaseConfig = {
@@ -455,7 +467,7 @@ const firebaseConfig = {
 
 
 /* =========================================
-   START FIREBASE
+   INITIALIZE FIREBASE
 ========================================= */
 
 const app =
@@ -510,6 +522,42 @@ let slideTimer = null;
 
 
 /* =========================================
+   TELL BLOGGER WHETHER SLIDER IS ACTIVE
+========================================= */
+
+function tellBloggerSliderStatus(
+    active
+) {
+
+    try {
+
+        window.parent.postMessage(
+
+            {
+                type:
+                    "KULZZY_CELEBRANT_STATUS",
+
+                active:
+                    active === true
+            },
+
+            "https://www.kulzzyradio.com"
+
+        );
+
+    } catch (error) {
+
+        console.log(
+            "Blogger status message error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
    LOAD CELEBRANTS
 ========================================= */
 
@@ -519,10 +567,12 @@ async function loadCelebrants() {
 
         const snapshot =
             await getDocs(
+
                 collection(
                     db,
                     "celebrants"
                 )
+
             );
 
 
@@ -533,7 +583,12 @@ async function loadCelebrants() {
         const activeCelebrants = [];
 
 
+        /* =====================================
+           CHECK EACH CELEBRANT
+        ===================================== */
+
         snapshot.forEach(
+
             function(doc) {
 
                 const data =
@@ -541,14 +596,27 @@ async function loadCelebrants() {
 
 
                 /*
-                 * Only accept records that
-                 * have an expiry time.
+                 * Must contain expiry time.
                  */
 
                 if (
-                    !data.expiresAt ||
+                    !data.expiresAt
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                 * Must contain pictures.
+                 */
+
+                if (
                     !data.images ||
-                    !Array.isArray(data.images)
+                    !Array.isArray(
+                        data.images
+                    )
                 ) {
 
                     return;
@@ -557,24 +625,26 @@ async function loadCelebrants() {
 
 
                 /*
-                 * 24-HOUR EXPIRATION
-                 */
-
-                if (
-                    Number(data.expiresAt) <= now
-                ) {
-
-                    return;
-
-                }
-
-
-                /*
-                 * Published must be true.
+                 * Must be published.
                  */
 
                 if (
                     data.published !== true
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                 * EXPIRED?
+                 */
+
+                if (
+                    Number(
+                        data.expiresAt
+                    ) <= now
                 ) {
 
                     return;
@@ -591,12 +661,13 @@ async function loadCelebrants() {
                 );
 
             }
+
         );
 
 
-        /*
-         * Clear current content.
-         */
+        /* =====================================
+           CLEAR OLD SLIDES
+        ===================================== */
 
         slidesContainer.innerHTML = "";
 
@@ -609,30 +680,46 @@ async function loadCelebrants() {
         currentSlide = 0;
 
 
-        /*
-         * No active celebrants.
-         */
+        /* =====================================
+           NO ACTIVE CELEBRANTS
+        ===================================== */
 
         if (
             activeCelebrants.length === 0
         ) {
 
-            slider.style.display = "none";
+            slider.style.display =
+                "none";
 
-            loading.style.display = "none";
+
+            loading.style.display =
+                "none";
+
 
             stopSlider();
+
+
+            /*
+             * Tell Blogger to completely
+             * hide the floating banner.
+             */
+
+            tellBloggerSliderStatus(
+                false
+            );
+
 
             return;
 
         }
 
 
-        /*
-         * Create slides.
-         */
+        /* =====================================
+           CREATE SLIDES
+        ===================================== */
 
         activeCelebrants.forEach(
+
             function(celebrant) {
 
                 const name =
@@ -641,11 +728,13 @@ async function loadCelebrants() {
 
 
                 celebrant.images.forEach(
+
                     function(imageUrl) {
 
                         if (
                             !imageUrl ||
-                            typeof imageUrl !== "string"
+                            typeof imageUrl !==
+                            "string"
                         ) {
 
                             return;
@@ -659,35 +748,41 @@ async function loadCelebrants() {
                         );
 
                     }
+
                 );
 
             }
+
         );
 
 
-        /*
-         * Get the final slides.
-         */
+        /* =====================================
+           GET SLIDES
+        ===================================== */
 
         slides =
             Array.from(
+
                 document.querySelectorAll(
                     ".slide"
                 )
+
             );
 
 
         dots =
             Array.from(
+
                 document.querySelectorAll(
                     ".dot"
                 )
+
             );
 
 
-        /*
-         * Show slider.
-         */
+        /* =====================================
+           DISPLAY SLIDER
+        ===================================== */
 
         if (
             slides.length > 0
@@ -696,20 +791,41 @@ async function loadCelebrants() {
             loading.style.display =
                 "none";
 
+
             slider.style.display =
                 "block";
 
-            showSlide(0);
+
+            showSlide(
+                0
+            );
+
 
             startSlider();
+
+
+            /*
+             * Tell Blogger to show the
+             * floating banner.
+             */
+
+            tellBloggerSliderStatus(
+                true
+            );
 
         } else {
 
             slider.style.display =
                 "none";
 
+
             loading.style.display =
                 "none";
+
+
+            tellBloggerSliderStatus(
+                false
+            );
 
         }
 
@@ -725,8 +841,14 @@ async function loadCelebrants() {
         slider.style.display =
             "none";
 
+
         loading.style.display =
             "none";
+
+
+        tellBloggerSliderStatus(
+            false
+        );
 
     }
 
@@ -752,6 +874,10 @@ function createSlide(
         "slide";
 
 
+    /* =====================================
+       IMAGE
+    ===================================== */
+
     const image =
         document.createElement(
             "img"
@@ -771,12 +897,17 @@ function createSlide(
 
 
     /*
-     * Keep head toward the top.
+     * Keep the top of the picture visible.
+     * This protects the celebrant's head.
      */
 
     image.style.objectPosition =
         "center top";
 
+
+    /* =====================================
+       INFO
+    ===================================== */
 
     const info =
         document.createElement(
@@ -826,6 +957,10 @@ function createSlide(
     );
 
 
+    /* =====================================
+       BUILD SLIDE
+    ===================================== */
+
     slide.appendChild(
         image
     );
@@ -841,9 +976,9 @@ function createSlide(
     );
 
 
-    /*
-     * Create navigation dot.
-     */
+    /* =====================================
+       DOT
+    ===================================== */
 
     const dot =
         document.createElement(
@@ -866,7 +1001,9 @@ function createSlide(
    SHOW SLIDE
 ========================================= */
 
-function showSlide(index) {
+function showSlide(
+    index
+) {
 
     if (
         slides.length === 0
@@ -878,6 +1015,7 @@ function showSlide(index) {
 
 
     slides.forEach(
+
         function(slide) {
 
             slide.classList.remove(
@@ -885,10 +1023,12 @@ function showSlide(index) {
             );
 
         }
+
     );
 
 
     dots.forEach(
+
         function(dot) {
 
             dot.classList.remove(
@@ -896,12 +1036,19 @@ function showSlide(index) {
             );
 
         }
+
     );
 
 
-    slides[index].classList.add(
-        "active"
-    );
+    if (
+        slides[index]
+    ) {
+
+        slides[index].classList.add(
+            "active"
+        );
+
+    }
 
 
     if (
@@ -922,7 +1069,7 @@ function showSlide(index) {
 
 
 /* =========================================
-   START AUTOMATIC SLIDER
+   START SLIDER
 ========================================= */
 
 function startSlider() {
@@ -941,6 +1088,7 @@ function startSlider() {
 
     slideTimer =
         setInterval(
+
             function() {
 
                 let next =
@@ -960,9 +1108,10 @@ function startSlider() {
                     next
                 );
 
-
             },
+
             4000
+
         );
 
 }
@@ -998,21 +1147,24 @@ loadCelebrants();
 
 
 /* =========================================
-   CHECK FOR NEW/EXPIRED CELEBRANTS
-   EVERY 60 SECONDS
+   REFRESH EVERY 60 SECONDS
 ========================================= */
 
 setInterval(
+
     function() {
 
         loadCelebrants();
 
     },
+
     60000
+
 );
 
 
 </script>
+
 
 </body>
 
