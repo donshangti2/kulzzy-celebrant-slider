@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kulzzy Celebrant Admin</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background: #07152f;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.admin-box {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #0d2145;
+    padding: 22px;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo h1 {
+    margin: 0;
+    color: #ffd21c;
+    font-size: 25px;
+}
+
+.logo p {
+    margin: 7px 0 0;
+    color: #d8d8d8;
+    font-size: 13px;
+}
+
+label {
+    display: block;
+    margin: 16px 0 7px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 9px;
+    outline: none;
+    background: #07152f;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #ffd21c;
+}
+
+.preview {
+    width: 100%;
+    height: 210px;
+    margin-top: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #061127;
+    display: none;
+}
+
+.preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.publish-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 9px;
+    background: #ffd21c;
+    color: #07152f;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.publish-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    display: none;
+    text-align: center;
+    font-size: 14px;
+}
+
+.success {
+    display: block;
+    background: rgba(40,180,90,0.15);
+    color: #7dffab;
+}
+
+.error {
+    display: block;
+    background: rgba(255,60,60,0.15);
+    color: #ff9b9b;
+}
+</style>
+</head>
+
+<body>
+
+<div class="admin-box">
+
+    <div class="logo">
+        <h1>🎉 KULZZY CELEBRANT</h1>
+        <p>Celebrant Slider Admin Panel</p>
+    </div>
+
+    <label for="name">
+        Celebrant Name
+    </label>
+
+    <input
+        type="text"
+        id="name"
+        placeholder="Enter celebrant name"
+    >
+
+    <label for="message">
+        Celebration Message
+    </label>
+
+    <textarea
+        id="message"
+        placeholder="Example: Happy Birthday from everyone at Kulzzy Radio Network!"
+    ></textarea>
+
+    <label for="imageUrl">
+        Celebrant Picture URL
+    </label>
+
+    <input
+        type="url"
+        id="imageUrl"
+        placeholder="Paste the direct image URL here"
+    >
+
+    <div class="preview" id="preview">
+        <img id="previewImage" src="" alt="Picture preview">
+    </div>
+
+    <button
+        class="publish-btn"
+        id="publishBtn"
+    >
+        🎉 PUBLISH CELEBRANT
+    </button>
+
+    <div
+        class="message"
+        id="statusMessage"
+    ></div>
+
+</div>
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+
+/* ==============================
+   FIREBASE CONFIGURATION
+================================ */
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDHI9tGBt_B5yCK45K-angMPwTlUwTrfIQ",
+
+    authDomain:
+        "kulzzy-celebrant-slider.firebaseapp.com",
+
+    projectId:
+        "kulzzy-celebrant-slider",
+
+    storageBucket:
+        "kulzzy-celebrant-slider.firebasestorage.app",
+
+    messagingSenderId:
+        "109098527853",
+
+    appId:
+        "1:109098527853:web:79613ac1407856f112e364",
+
+    measurementId:
+        "G-7Z0WJFH5X0"
+};
+
+
+/* ==============================
+   INITIALIZE FIREBASE
+================================ */
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+/* ==============================
+   ELEMENTS
+================================ */
+
+const nameInput =
+    document.getElementById("name");
+
+const messageInput =
+    document.getElementById("message");
+
+const imageUrlInput =
+    document.getElementById("imageUrl");
+
+const preview =
+    document.getElementById("preview");
+
+const previewImage =
+    document.getElementById("previewImage");
+
+const publishBtn =
+    document.getElementById("publishBtn");
+
+const statusMessage =
+    document.getElementById("statusMessage");
+
+
+/* ==============================
+   IMAGE PREVIEW
+================================ */
+
+imageUrlInput.addEventListener(
+    "input",
+    function() {
+
+        const url =
+            imageUrlInput.value.trim();
+
+        if (!url) {
+
+            preview.style.display = "none";
+
+            previewImage.src = "";
+
+            return;
+        }
+
+        previewImage.src = url;
+
+        preview.style.display = "block";
+    }
+);
+
+
+/* ==============================
+   IMAGE ERROR
+================================ */
+
+previewImage.addEventListener(
+    "error",
+    function() {
+
+        preview.style.display = "none";
+
+        showMessage(
+            "The image URL could not be loaded.",
+            "error"
+        );
+    }
+);
+
+
+/* ==============================
+   SHOW MESSAGE
+================================ */
+
+function showMessage(
+    text,
+    type
+) {
+
+    statusMessage.textContent = text;
+
+    statusMessage.className =
+        "message " + type;
+}
+
+
+/* ==============================
+   PUBLISH
+================================ */
+
+publishBtn.addEventListener(
+    "click",
+    async function() {
+
+        const name =
+            nameInput.value.trim();
+
+        const message =
+            messageInput.value.trim();
+
+        const imageUrl =
+            imageUrlInput.value.trim();
+
+
+        if (!name) {
+
+            showMessage(
+                "Please enter the celebrant name.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if (!imageUrl) {
+
+            showMessage(
+                "Please enter the picture URL.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        publishBtn.disabled = true;
+
+        publishBtn.textContent =
+            "PUBLISHING...";
+
+
+        try {
+
+            await addDoc(
+                collection(
+                    db,
+                    "celebrants"
+                ),
+                {
+
+                    name: name,
+
+                    message: message,
+
+                    imageUrl: imageUrl,
+
+                    published: true,
+
+                    createdAt:
+                        serverTimestamp()
+                }
+            );
+
+
+            showMessage(
+                "🎉 Celebrant published successfully!",
+                "success"
+            );
+
+
+            nameInput.value = "";
+
+            messageInput.value = "";
+
+            imageUrlInput.value = "";
+
+            preview.style.display = "none";
+
+            previewImage.src = "";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "Unable to publish. Check your Firebase setup and rules.",
+                "error"
+            );
+
+        }
+
+
+        publishBtn.disabled = false;
+
+        publishBtn.textContent =
+            "🎉 PUBLISH CELEBRANT";
+    }
+);
+
+</script>
+
+</body>
+</html>
