@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kulzzy Celebrant Admin</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background: #07152f;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.box {
+    background: #0d2145;
+    padding: 22px;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.logo h1 {
+    margin: 0;
+    color: #ffd21c;
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.logo p {
+    margin: 7px 0 0;
+    color: #d7dce6;
+    font-size: 13px;
+}
+
+label {
+    display: block;
+    margin: 16px 0 7px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 9px;
+    outline: none;
+    background: #07152f;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+input:focus {
+    border-color: #ffd21c;
+}
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    border: none;
+    border-radius: 9px;
+    background: #ffd21c;
+    color: #07152f;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.primary-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.logout-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 11px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    background: transparent;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 105px;
+    padding: 20px;
+    border: 2px dashed #ffd21c;
+    border-radius: 12px;
+    background: rgba(255,210,28,0.05);
+    color: #ffd21c;
+    font-size: 16px;
+    font-weight: 800;
+    text-align: center;
+    cursor: pointer;
+}
+
+#photoInput {
+    display: none;
+}
+
+.preview-title {
+    display: none;
+    margin: 18px 0 10px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffd21c;
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.preview-item {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #061127;
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
+.message {
+    display: none;
+    margin-top: 15px;
+    padding: 13px;
+    border-radius: 9px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message.success {
+    display: block;
+    background: rgba(40,180,90,0.15);
+    color: #7dffab;
+}
+
+.message.error {
+    display: block;
+    background: rgba(255,60,60,0.15);
+    color: #ff9b9b;
+}
+
+.progress {
+    display: none;
+    margin-top: 12px;
+    text-align: center;
+    color: #ffd21c;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.admin-header h2 {
+    margin: 0;
+    color: #ffd21c;
+    font-size: 20px;
+}
+
+.admin-email {
+    margin-top: 4px;
+    color: #cbd3df;
+    font-size: 11px;
+    word-break: break-all;
+}
+
+.published-section {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.published-title {
+    margin: 0 0 15px;
+    color: #ffd21c;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.celebrant-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #07152f;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.celebrant-thumb {
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #061127;
+}
+
+.celebrant-thumb img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.celebrant-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.celebrant-card-name {
+    margin: 0 0 5px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 900;
+    word-break: break-word;
+}
+
+.celebrant-card-count {
+    color: #aeb8c8;
+    font-size: 11px;
+}
+
+.delete-btn {
+    flex-shrink: 0;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 7px;
+    background: #d71919;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.delete-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.empty-list {
+    padding: 20px 10px;
+    text-align: center;
+    color: #aeb8c8;
+    font-size: 13px;
+}
+
+.list-loading {
+    padding: 15px;
+    text-align: center;
+    color: #ffd21c;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 420px) {
+
+    body {
+        padding: 12px;
+    }
+
+    .box {
+        padding: 17px;
+        border-radius: 13px;
+    }
+
+    .logo h1 {
+        font-size: 22px;
+    }
+
+    .celebrant-card {
+        gap: 9px;
+    }
+
+    .celebrant-thumb {
+        width: 62px;
+        height: 62px;
+    }
+
+    .delete-btn {
+        padding: 9px 10px;
+        font-size: 11px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="box" id="loginBox">
+
+    <div class="logo">
+
+        <h1>🎉 KULZZY CELEBRANT</h1>
+
+        <p>Secure Admin Login</p>
+
+    </div>
+
+    <label for="loginEmail">Admin Email</label>
+
+    <input
+        type="email"
+        id="loginEmail"
+        placeholder="Enter admin email"
+        autocomplete="email"
+    >
+
+    <label for="loginPassword">Password</label>
+
+    <input
+        type="password"
+        id="loginPassword"
+        placeholder="Enter password"
+        autocomplete="current-password"
+    >
+
+    <button class="primary-btn" id="loginBtn">
+        🔐 LOGIN
+    </button>
+
+    <div class="message" id="loginMessage"></div>
+
+</div>
+
+<div class="box hidden" id="adminBox">
+
+    <div class="admin-header">
+
+        <div>
+
+            <h2>🎉 KULZZY CELEBRANT</h2>
+
+            <div class="admin-email" id="adminEmail"></div>
+
+        </div>
+
+    </div>
+
+    <label for="photoInput" class="upload-label">
+
+        📸 SELECT CELEBRANT PICTURES
+
+        <br>
+
+        <small style="display:block;margin-top:7px;color:#ffffff;">
+            Select one or multiple pictures
+        </small>
+
+    </label>
+
+    <input
+        type="file"
+        id="photoInput"
+        accept="image/*"
+        multiple
+    >
+
+    <div class="preview-title" id="previewTitle">
+        🖼️ SELECTED PICTURES
+    </div>
+
+    <div class="preview-grid" id="previewGrid"></div>
+
+    <label for="celebrantName">
+        Celebrant Name
+    </label>
+
+    <input
+        type="text"
+        id="celebrantName"
+        placeholder="Enter celebrant name"
+        autocomplete="off"
+    >
+
+    <div class="progress" id="progress">
+        Uploading pictures...
+    </div>
+
+    <button class="primary-btn" id="publishBtn">
+        🎉 PUBLISH CELEBRANT
+    </button>
+
+    <div class="message" id="statusMessage"></div>
+
+    <div class="published-section">
+
+        <h3 class="published-title">
+            📋 PUBLISHED CELEBRANTS
+        </h3>
+
+        <div id="celebrantsList">
+
+            <div class="list-loading">
+                Loading celebrants...
+            </div>
+
+        </div>
+
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">
+        🔓 LOG OUT
+    </button>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import {
+    initializeApp
+} from
+"https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc,
+    serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+} from
+"https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDHI9tGBt_B5yCK45K-angMPwTlUwTrfIQ",
+
+    authDomain:
+        "kulzzy-celebrant-slider.firebaseapp.com",
+
+    projectId:
+        "kulzzy-celebrant-slider",
+
+    storageBucket:
+        "kulzzy-celebrant-slider.firebasestorage.app",
+
+    messagingSenderId:
+        "109098527853",
+
+    appId:
+        "1:109098527853:web:79613ac1407856f112e364",
+
+    measurementId:
+        "G-7Z0WJFH5X0"
+
+};
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getFirestore(app);
+
+const auth =
+    getAuth(app);
+
+const CLOUD_NAME =
+    "s4j0x7dk";
+
+const UPLOAD_PRESET =
+    "kulzzy_celebrants";
+
+const loginBox =
+    document.getElementById("loginBox");
+
+const adminBox =
+    document.getElementById("adminBox");
+
+const loginEmail =
+    document.getElementById("loginEmail");
+
+const loginPassword =
+    document.getElementById("loginPassword");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const loginMessage =
+    document.getElementById("loginMessage");
+
+const adminEmail =
+    document.getElementById("adminEmail");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+const photoInput =
+    document.getElementById("photoInput");
+
+const previewGrid =
+    document.getElementById("previewGrid");
+
+const previewTitle =
+    document.getElementById("previewTitle");
+
+const celebrantName =
+    document.getElementById("celebrantName");
+
+const publishBtn =
+    document.getElementById("publishBtn");
+
+const progress =
+    document.getElementById("progress");
+
+const statusMessage =
+    document.getElementById("statusMessage");
+
+const celebrantsList =
+    document.getElementById("celebrantsList");
+
+let selectedFiles = [];
+
+function showMessage(
+    element,
+    text,
+    type
+) {
+
+    element.textContent = text;
+
+    element.className =
+        "message " + type;
+
+}
+
+onAuthStateChanged(
+    auth,
+    function(user) {
+
+        if (user) {
+
+            loginBox.classList.add("hidden");
+
+            adminBox.classList.remove("hidden");
+
+            adminEmail.textContent =
+                user.email || "";
+
+            loadPublishedCelebrants();
+
+        } else {
+
+            adminBox.classList.add("hidden");
+
+            loginBox.classList.remove("hidden");
+
+            adminEmail.textContent = "";
+
+        }
+
+    }
+);
+
+loginBtn.addEventListener(
+    "click",
+    async function() {
+
+        const email =
+            loginEmail.value.trim();
+
+        const password =
+            loginPassword.value;
+
+        if (!email) {
+
+            showMessage(
+                loginMessage,
+                "Please enter your email.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        if (!password) {
+
+            showMessage(
+                loginMessage,
+                "Please enter your password.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        loginBtn.disabled = true;
+
+        loginBtn.textContent =
+            "LOGGING IN...";
+
+        try {
+
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            loginMessage.className =
+                "message";
+
+            loginPassword.value = "";
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                loginMessage,
+                "Login failed. Check your email and password.",
+                "error"
+            );
+
+        }
+
+        loginBtn.disabled = false;
+
+        loginBtn.textContent =
+            "🔐 LOGIN";
+
+    }
+);
+
+logoutBtn.addEventListener(
+    "click",
+    async function() {
+
+        await signOut(auth);
+
+        selectedFiles = [];
+
+        photoInput.value = "";
+
+        previewGrid.innerHTML = "";
+
+        previewTitle.style.display =
+            "none";
+
+        celebrantName.value = "";
+
+    }
+);
+
+photoInput.addEventListener(
+    "change",
+    function() {
+
+        selectedFiles =
+            Array.from(photoInput.files);
+
+        showPreviews();
+
+    }
+);
+
+function showPreviews() {
+
+    previewGrid.innerHTML = "";
+
+    if (
+        selectedFiles.length === 0
+    ) {
+
+        previewTitle.style.display =
+            "none";
+
+        return;
+
+    }
+
+    previewTitle.style.display =
+        "block";
+
+    selectedFiles.forEach(
+        function(file) {
+
+            const reader =
+                new FileReader();
+
+            reader.onload =
+                function(event) {
+
+                    const item =
+                        document.createElement("div");
+
+                    item.className =
+                        "preview-item";
+
+                    const img =
+                        document.createElement("img");
+
+                    img.src =
+                        event.target.result;
+
+                    img.alt =
+                        "Celebrant picture";
+
+                    item.appendChild(img);
+
+                    previewGrid.appendChild(item);
+
+                };
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+}
+
+async function uploadToCloudinary(file) {
+
+    const formData =
+        new FormData();
+
+    formData.append("file", file);
+
+    formData.append(
+        "upload_preset",
+        UPLOAD_PRESET
+    );
+
+    const response =
+        await fetch(
+            `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Cloudinary upload failed."
+        );
+
+    }
+
+    const data =
+        await response.json();
+
+    return data.secure_url;
+
+}
+
+publishBtn.addEventListener(
+    "click",
+    async function() {
+
+        const user =
+            auth.currentUser;
+
+        if (!user) {
+
+            showMessage(
+                statusMessage,
+                "Please log in first.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        const name =
+            celebrantName.value.trim();
+
+        if (
+            selectedFiles.length === 0
+        ) {
+
+            showMessage(
+                statusMessage,
+                "Please select at least one picture.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        if (!name) {
+
+            showMessage(
+                statusMessage,
+                "Please enter the celebrant name.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        publishBtn.disabled = true;
+
+        publishBtn.textContent =
+            "UPLOADING...";
+
+        progress.style.display =
+            "block";
+
+        try {
+
+            const imageUrls = [];
+
+            for (
+                let i = 0;
+                i < selectedFiles.length;
+                i++
+            ) {
+
+                progress.textContent =
+                    `Uploading picture ${i + 1} of ${selectedFiles.length}...`;
+
+                const imageUrl =
+                    await uploadToCloudinary(
+                        selectedFiles[i]
+                    );
+
+                imageUrls.push(imageUrl);
+
+            }
+
+            await addDoc(
+                collection(db, "celebrants"),
+                {
+                    name: name,
+                    images: imageUrls,
+                    published: true,
+                    publishedAt: Date.now(),
+                    createdAt: serverTimestamp(),
+                    createdBy: user.uid
+                }
+            );
+
+            showMessage(
+                statusMessage,
+                "🎉 Celebrant published successfully! The celebrant will remain live until you delete it.",
+                "success"
+            );
+
+            selectedFiles = [];
+
+            photoInput.value = "";
+
+            previewGrid.innerHTML = "";
+
+            previewTitle.style.display =
+                "none";
+
+            celebrantName.value = "";
+
+            await loadPublishedCelebrants();
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                statusMessage,
+                "Publishing failed. Please try again.",
+                "error"
+            );
+
+        }
+
+        publishBtn.disabled = false;
+
+        publishBtn.textContent =
+            "🎉 PUBLISH CELEBRANT";
+
+        progress.style.display =
+            "none";
+
+    }
+);
+
+async function loadPublishedCelebrants() {
+
+    celebrantsList.innerHTML =
+        '<div class="list-loading">Loading celebrants...</div>';
+
+    try {
+
+        const snapshot =
+            await getDocs(
+                collection(db, "celebrants")
+            );
+
+        const celebrants = [];
+
+        snapshot.forEach(
+            function(documentSnapshot) {
+
+                const data =
+                    documentSnapshot.data();
+
+                if (
+                    data.published !== true
+                ) {
+                    return;
+                }
+
+                if (
+                    !data.images ||
+                    !Array.isArray(data.images) ||
+                    data.images.length === 0
+                ) {
+                    return;
+                }
+
+                celebrants.push({
+                    id: documentSnapshot.id,
+                    ...data
+                });
+
+            }
+        );
+
+        if (
+            celebrants.length === 0
+        ) {
+
+            celebrantsList.innerHTML =
+                '<div class="empty-list">No published celebrants yet.</div>';
+
+            return;
+
+        }
+
+        celebrants.sort(
+            function(a, b) {
+
+                return (
+                    Number(b.publishedAt || 0)
+                    -
+                    Number(a.publishedAt || 0)
+                );
+
+            }
+        );
+
+        celebrantsList.innerHTML = "";
+
+        celebrants.forEach(
+            function(celebrant) {
+
+                const card =
+                    document.createElement("div");
+
+                card.className =
+                    "celebrant-card";
+
+                const thumb =
+                    document.createElement("div");
+
+                thumb.className =
+                    "celebrant-thumb";
+
+                const img =
+                    document.createElement("img");
+
+                img.src =
+                    celebrant.images[0];
+
+                img.alt =
+                    celebrant.name ||
+                    "Celebrant";
+
+                img.loading =
+                    "lazy";
+
+                thumb.appendChild(img);
+
+                const details =
+                    document.createElement("div");
+
+                details.className =
+                    "celebrant-details";
+
+                const name =
+                    document.createElement("div");
+
+                name.className =
+                    "celebrant-card-name";
+
+                name.textContent =
+                    celebrant.name ||
+                    "Unnamed Celebrant";
+
+                const count =
+                    document.createElement("div");
+
+                count.className =
+                    "celebrant-card-count";
+
+                count.textContent =
+                    celebrant.images.length +
+                    (
+                        celebrant.images.length === 1
+                        ? " picture"
+                        : " pictures"
+                    );
+
+                details.appendChild(name);
+
+                details.appendChild(count);
+
+                const deleteButton =
+                    document.createElement("button");
+
+                deleteButton.className =
+                    "delete-btn";
+
+                deleteButton.textContent =
+                    "🗑️ DELETE";
+
+                deleteButton.addEventListener(
+                    "click",
+                    function() {
+
+                        deleteCelebrant(
+                            celebrant.id,
+                            celebrant.name ||
+                            "this celebrant",
+                            deleteButton
+                        );
+
+                    }
+                );
+
+                card.appendChild(thumb);
+
+                card.appendChild(details);
+
+                card.appendChild(deleteButton);
+
+                celebrantsList.appendChild(card);
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Loading celebrants failed:",
+            error
+        );
+
+        celebrantsList.innerHTML =
+            '<div class="empty-list">Unable to load celebrants. Please refresh.</div>';
+
+    }
+
+}
+
+async function deleteCelebrant(
+    celebrantId,
+    celebrantNameText,
+    button
+) {
+
+    const confirmed =
+        confirm(
+            "Delete " +
+            celebrantNameText +
+            "?\n\n" +
+            "This will remove the celebrant from the Kulzzy Celebrant Slider."
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    button.disabled = true;
+
+    button.textContent =
+        "DELETING...";
+
+    try {
+
+        await deleteDoc(
+            doc(
+                db,
+                "celebrants",
+                celebrantId
+            )
+        );
+
+        showMessage(
+            statusMessage,
+            "🗑️ " +
+            celebrantNameText +
+            " has been deleted successfully.",
+            "success"
+        );
+
+        await loadPublishedCelebrants();
+
+    } catch (error) {
+
+        console.error(
+            "Delete error:",
+            error
+        );
+
+        button.disabled = false;
+
+        button.textContent =
+            "🗑️ DELETE";
+
+        showMessage(
+            statusMessage,
+            "Delete failed. Please try again.",
+            "error"
+        );
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>
