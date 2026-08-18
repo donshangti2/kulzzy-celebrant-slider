@@ -24,13 +24,9 @@
 
 html,
 body {
-
     margin: 0;
-
     padding: 0;
-
     width: 100%;
-
     min-height: 0;
 
     background: transparent;
@@ -39,12 +35,12 @@ body {
         Arial,
         Helvetica,
         sans-serif;
-
 }
 
 
 /* =========================================
-   MAIN HORIZONTAL SLIDER
+   MAIN SLIDER
+   25 : 35 PORTRAIT RATIO
 ========================================= */
 
 .celebrant-slider {
@@ -53,7 +49,12 @@ body {
 
     width: 100%;
 
-    height: 210px;
+    /*
+       25:35 = 0.7142857
+       Height = width × 35 / 25
+    */
+
+    aspect-ratio: 25 / 35;
 
     margin: 0 auto;
 
@@ -64,7 +65,6 @@ body {
     background: #07152f;
 
     display: none;
-
 }
 
 
@@ -92,7 +92,6 @@ body {
         opacity 0.8s ease,
         transform 4s ease,
         visibility 0.8s ease;
-
 }
 
 
@@ -103,28 +102,24 @@ body {
     visibility: visible;
 
     transform: scale(1);
-
 }
 
 
 /* =========================================
    CELEBRANT IMAGE
-
-   HORIZONTAL + HEAD PROTECTION
 ========================================= */
 
 .slide img {
+
+    display: block;
 
     width: 100%;
 
     height: 100%;
 
-    display: block;
-
     object-fit: cover;
 
     object-position: center center;
-
 }
 
 
@@ -154,7 +149,6 @@ body {
         );
 
     pointer-events: none;
-
 }
 
 
@@ -178,7 +172,6 @@ body {
         35px
         14px
         13px;
-
 }
 
 
@@ -197,7 +190,6 @@ body {
     text-shadow:
         0 2px 6px
         rgba(0,0,0,0.9);
-
 }
 
 
@@ -229,7 +221,6 @@ body {
     font-weight: 900;
 
     text-transform: uppercase;
-
 }
 
 
@@ -250,7 +241,6 @@ body {
     display: flex;
 
     gap: 5px;
-
 }
 
 
@@ -269,7 +259,6 @@ body {
 
     transition:
         all 0.3s ease;
-
 }
 
 
@@ -278,7 +267,6 @@ body {
     background: #ffd21c;
 
     transform: scale(1.3);
-
 }
 
 
@@ -290,7 +278,7 @@ body {
 
     width: 100%;
 
-    height: 210px;
+    aspect-ratio: 25 / 35;
 
     margin: 0 auto;
 
@@ -309,7 +297,6 @@ body {
     font-size: 13px;
 
     font-weight: 700;
-
 }
 
 
@@ -323,10 +310,9 @@ body {
 
         width: 100%;
 
-        height: 210px;
+        aspect-ratio: 25 / 35;
 
         border-radius: 8px;
-
     }
 
 
@@ -334,15 +320,13 @@ body {
 
         width: 100%;
 
-        height: 210px;
-
+        aspect-ratio: 25 / 35;
     }
 
 
     .celebrant-name {
 
         font-size: 18px;
-
     }
 
 
@@ -352,7 +336,6 @@ body {
             30px
             12px
             12px;
-
     }
 
 }
@@ -364,24 +347,9 @@ body {
 
 @media (max-width: 400px) {
 
-    .celebrant-slider {
-
-        height: 200px;
-
-    }
-
-
-    .loading {
-
-        height: 200px;
-
-    }
-
-
     .celebrant-name {
 
         font-size: 17px;
-
     }
 
 
@@ -391,7 +359,6 @@ body {
             28px
             10px
             10px;
-
     }
 
 }
@@ -403,24 +370,9 @@ body {
 
 @media (max-width: 340px) {
 
-    .celebrant-slider {
-
-        height: 190px;
-
-    }
-
-
-    .loading {
-
-        height: 190px;
-
-    }
-
-
     .celebrant-name {
 
         font-size: 16px;
-
     }
 
 }
@@ -441,7 +393,7 @@ body {
     class="loading"
     id="loading"
 >
-    🎉 Loading today's celebrants...
+    🎉 kulzzy radio services...
 </div>
 
 
@@ -580,42 +532,6 @@ let slideTimer = null;
 
 
 /* =========================================
-   BLOGGER STATUS
-========================================= */
-
-function tellBloggerSliderStatus(
-    active
-) {
-
-    try {
-
-        window.parent.postMessage(
-
-            {
-                type:
-                    "KULZZY_CELEBRANT_STATUS",
-
-                active:
-                    active === true
-            },
-
-            "https://www.kulzzyradio.com"
-
-        );
-
-    } catch (error) {
-
-        console.log(
-            "Blogger status message error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================
    LOAD CELEBRANTS
 ========================================= */
 
@@ -649,10 +565,6 @@ async function loadCelebrants() {
                     doc.data();
 
 
-                /*
-                 * Pictures required.
-                 */
-
                 if (
                     !data.images ||
                     !Array.isArray(
@@ -665,10 +577,6 @@ async function loadCelebrants() {
                 }
 
 
-                /*
-                 * Published required.
-                 */
-
                 if (
                     data.published !== true
                 ) {
@@ -677,13 +585,6 @@ async function loadCelebrants() {
 
                 }
 
-
-                /*
-                 * NO 24-HOUR CHECK.
-                 *
-                 * Celebrants stay visible
-                 * until deleted from Admin.
-                 */
 
                 activeCelebrants.push(
                     data
@@ -726,11 +627,6 @@ async function loadCelebrants() {
 
 
             stopSlider();
-
-
-            tellBloggerSliderStatus(
-                false
-            );
 
 
             return;
@@ -827,11 +723,6 @@ async function loadCelebrants() {
 
             startSlider();
 
-
-            tellBloggerSliderStatus(
-                true
-            );
-
         } else {
 
             slider.style.display =
@@ -840,11 +731,6 @@ async function loadCelebrants() {
 
             loading.style.display =
                 "none";
-
-
-            tellBloggerSliderStatus(
-                false
-            );
 
         }
 
@@ -863,11 +749,6 @@ async function loadCelebrants() {
 
         loading.style.display =
             "none";
-
-
-        tellBloggerSliderStatus(
-            false
-        );
 
     }
 
@@ -914,10 +795,6 @@ function createSlide(
     image.loading =
         "lazy";
 
-
-    /*
-     * Keep image centered.
-     */
 
     image.style.objectPosition =
         "center center";
