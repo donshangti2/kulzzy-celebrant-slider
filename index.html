@@ -109,8 +109,6 @@ body {
 
 /* =========================================
    CELEBRANT IMAGE
-
-   HORIZONTAL + HEAD PROTECTION
 ========================================= */
 
 .slide img {
@@ -467,12 +465,144 @@ body {
 </div>
 
 
-<script type="module">
+<script>
+
+/* =========================================
+   BLOGGER AUTO HEIGHT
+========================================= */
+
+function sendSliderHeight() {
+
+    requestAnimationFrame(function () {
+
+        var height = Math.max(
+
+            document.body
+                ? document.body.scrollHeight
+                : 0,
+
+            document.body
+                ? document.body.offsetHeight
+                : 0,
+
+            document.documentElement
+                ? document.documentElement.scrollHeight
+                : 0,
+
+            document.documentElement
+                ? document.documentElement.offsetHeight
+                : 0,
+
+            document.documentElement
+                ? document.documentElement.clientHeight
+                : 0
+
+        );
+
+
+        /*
+         * Send the actual slider height
+         * to the Blogger iframe wrapper.
+         */
+
+        window.parent.postMessage(
+
+            {
+                type:
+                    "KULZZY_SLIDER_HEIGHT",
+
+                height:
+                    height
+            },
+
+            "*"
+
+        );
+
+    });
+
+}
+
+
+/* =========================================
+   BLOGGER REQUESTS HEIGHT
+========================================= */
+
+window.addEventListener(
+
+    "message",
+
+    function (event) {
+
+        if (
+            event.data &&
+            event.data.type ===
+            "KULZZY_REQUEST_SLIDER_HEIGHT"
+        ) {
+
+            sendSliderHeight();
+
+        }
+
+    }
+
+);
+
+
+/* =========================================
+   RESIZE
+========================================= */
+
+window.addEventListener(
+
+    "resize",
+
+    function () {
+
+        sendSliderHeight();
+
+    }
+
+);
+
+
+/* =========================================
+   RESIZE OBSERVER
+========================================= */
+
+if (
+    typeof ResizeObserver !==
+    "undefined"
+) {
+
+    var heightObserver =
+        new ResizeObserver(
+
+            function () {
+
+                sendSliderHeight();
+
+            }
+
+        );
+
+
+    heightObserver.observe(
+        document.body
+    );
+
+}
 
 
 /* =========================================
    FIREBASE
 ========================================= */
+
+</script>
+
+
+<script type="module">
+
 
 import {
 
@@ -649,10 +779,6 @@ async function loadCelebrants() {
                     doc.data();
 
 
-                /*
-                 * Pictures required.
-                 */
-
                 if (
                     !data.images ||
                     !Array.isArray(
@@ -665,10 +791,6 @@ async function loadCelebrants() {
                 }
 
 
-                /*
-                 * Published required.
-                 */
-
                 if (
                     data.published !== true
                 ) {
@@ -677,13 +799,6 @@ async function loadCelebrants() {
 
                 }
 
-
-                /*
-                 * NO 24-HOUR CHECK.
-                 *
-                 * Celebrants stay visible
-                 * until deleted from Admin.
-                 */
 
                 activeCelebrants.push(
                     data
@@ -731,6 +846,9 @@ async function loadCelebrants() {
             tellBloggerSliderStatus(
                 false
             );
+
+
+            sendSliderHeight();
 
 
             return;
@@ -832,6 +950,28 @@ async function loadCelebrants() {
                 true
             );
 
+
+            /*
+             * Wait for the browser to apply
+             * the new display state before
+             * reporting the height.
+             */
+
+            setTimeout(
+                sendSliderHeight,
+                50
+            );
+
+            setTimeout(
+                sendSliderHeight,
+                300
+            );
+
+            setTimeout(
+                sendSliderHeight,
+                1000
+            );
+
         } else {
 
             slider.style.display =
@@ -845,6 +985,9 @@ async function loadCelebrants() {
             tellBloggerSliderStatus(
                 false
             );
+
+
+            sendSliderHeight();
 
         }
 
@@ -868,6 +1011,9 @@ async function loadCelebrants() {
         tellBloggerSliderStatus(
             false
         );
+
+
+        sendSliderHeight();
 
     }
 
@@ -915,12 +1061,23 @@ function createSlide(
         "lazy";
 
 
-    /*
-     * Keep image centered.
-     */
-
     image.style.objectPosition =
         "center center";
+
+
+    /*
+     * Recalculate height after
+     * each image loads.
+     */
+
+    image.addEventListener(
+        "load",
+        function () {
+
+            sendSliderHeight();
+
+        }
+    );
 
 
     /* =====================================
@@ -1125,6 +1282,9 @@ function startSlider() {
                 showSlide(
                     next
                 );
+
+
+                sendSliderHeight();
 
             },
 
