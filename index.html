@@ -24,9 +24,13 @@
 
 html,
 body {
+
     margin: 0;
+
     padding: 0;
+
     width: 100%;
+
     min-height: 0;
 
     background: transparent;
@@ -35,6 +39,8 @@ body {
         Arial,
         Helvetica,
         sans-serif;
+
+    overflow-x: hidden;
 }
 
 
@@ -49,11 +55,6 @@ body {
 
     width: 100%;
 
-    /*
-       25:35 = 0.7142857
-       Height = width × 35 / 25
-    */
-
     aspect-ratio: 25 / 35;
 
     margin: 0 auto;
@@ -65,6 +66,30 @@ body {
     background: #07152f;
 
     display: none;
+
+    touch-action: pan-y;
+
+    user-select: none;
+
+    -webkit-user-select: none;
+
+}
+
+
+/* =========================================
+   SLIDES CONTAINER
+========================================= */
+
+#slidesContainer {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
 }
 
 
@@ -86,14 +111,19 @@ body {
 
     visibility: hidden;
 
-    transform: scale(1.02);
+    transform: translateX(0);
 
     transition:
-        opacity 0.8s ease,
-        transform 4s ease,
-        visibility 0.8s ease;
+        opacity 0.45s ease,
+        transform 0.45s ease,
+        visibility 0.45s ease;
+
 }
 
+
+/* =========================================
+   ACTIVE SLIDE
+========================================= */
 
 .slide.active {
 
@@ -101,12 +131,44 @@ body {
 
     visibility: visible;
 
-    transform: scale(1);
+    transform: translateX(0);
+
+}
+
+
+/* =========================================
+   PREVIOUS SLIDE
+========================================= */
+
+.slide.previous {
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateX(-100%);
+
+}
+
+
+/* =========================================
+   NEXT SLIDE
+========================================= */
+
+.slide.next {
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateX(100%);
+
 }
 
 
 /* =========================================
    CELEBRANT IMAGE
+   FULL 25:35 IMAGE
 ========================================= */
 
 .slide img {
@@ -117,9 +179,20 @@ body {
 
     height: 100%;
 
-    object-fit: cover;
+    /*
+     * CONTAIN keeps the complete picture.
+     * Nothing at the top, bottom or sides
+     * will be cut off.
+     */
+
+    object-fit: contain;
 
     object-position: center center;
+
+    background: #07152f;
+
+    pointer-events: none;
+
 }
 
 
@@ -139,16 +212,17 @@ body {
 
     bottom: 0;
 
-    height: 45%;
+    height: 40%;
 
     background:
         linear-gradient(
             to bottom,
             transparent,
-            rgba(0, 0, 0, 0.88)
+            rgba(0, 0, 0, 0.90)
         );
 
     pointer-events: none;
+
 }
 
 
@@ -171,7 +245,10 @@ body {
     padding:
         35px
         14px
-        13px;
+        15px;
+
+    pointer-events: none;
+
 }
 
 
@@ -190,6 +267,7 @@ body {
     text-shadow:
         0 2px 6px
         rgba(0,0,0,0.9);
+
 }
 
 
@@ -206,7 +284,7 @@ body {
     margin-top: 6px;
 
     padding:
-        4px 8px;
+        5px 8px;
 
     border-radius: 5px;
 
@@ -221,6 +299,7 @@ body {
     font-weight: 900;
 
     text-transform: uppercase;
+
 }
 
 
@@ -241,14 +320,15 @@ body {
     display: flex;
 
     gap: 5px;
+
 }
 
 
 .dot {
 
-    width: 6px;
+    width: 7px;
 
-    height: 6px;
+    height: 7px;
 
     flex-shrink: 0;
 
@@ -259,6 +339,9 @@ body {
 
     transition:
         all 0.3s ease;
+
+    cursor: pointer;
+
 }
 
 
@@ -266,7 +349,56 @@ body {
 
     background: #ffd21c;
 
-    transform: scale(1.3);
+    transform: scale(1.35);
+
+}
+
+
+/* =========================================
+   SWIPE INDICATOR
+========================================= */
+
+.swipe-hint {
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 50%;
+
+    z-index: 20;
+
+    transform:
+        translate(-50%, -50%);
+
+    padding:
+        8px 12px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(0,0,0,0.65);
+
+    color: #ffffff;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    pointer-events: none;
+
+    opacity: 0.9;
+
+    transition:
+        opacity 0.5s ease;
+
+}
+
+
+.swipe-hint.hidden {
+
+    opacity: 0;
+
 }
 
 
@@ -297,6 +429,7 @@ body {
     font-size: 13px;
 
     font-weight: 700;
+
 }
 
 
@@ -313,6 +446,7 @@ body {
         aspect-ratio: 25 / 35;
 
         border-radius: 8px;
+
     }
 
 
@@ -321,12 +455,14 @@ body {
         width: 100%;
 
         aspect-ratio: 25 / 35;
+
     }
 
 
     .celebrant-name {
 
         font-size: 18px;
+
     }
 
 
@@ -336,6 +472,7 @@ body {
             30px
             12px
             12px;
+
     }
 
 }
@@ -350,6 +487,7 @@ body {
     .celebrant-name {
 
         font-size: 17px;
+
     }
 
 
@@ -359,6 +497,17 @@ body {
             28px
             10px
             10px;
+
+    }
+
+
+    .swipe-hint {
+
+        font-size: 10px;
+
+        padding:
+            7px 10px;
+
     }
 
 }
@@ -373,6 +522,7 @@ body {
     .celebrant-name {
 
         font-size: 16px;
+
     }
 
 }
@@ -415,6 +565,14 @@ body {
         class="slider-dots"
         id="sliderDots"
     ></div>
+
+
+    <div
+        class="swipe-hint"
+        id="swipeHint"
+    >
+        ← Swipe to view →
+    </div>
 
 </div>
 
@@ -518,6 +676,12 @@ const dotsContainer =
     );
 
 
+const swipeHint =
+    document.getElementById(
+        "swipeHint"
+    );
+
+
 /* =========================================
    SLIDER VARIABLES
 ========================================= */
@@ -528,7 +692,18 @@ let dots = [];
 
 let currentSlide = 0;
 
-let slideTimer = null;
+
+/* =========================================
+   TOUCH / MOUSE VARIABLES
+========================================= */
+
+let startX = 0;
+
+let currentX = 0;
+
+let isDragging = false;
+
+let dragStarted = false;
 
 
 /* =========================================
@@ -552,10 +727,6 @@ async function loadCelebrants() {
 
         const activeCelebrants = [];
 
-
-        /* =====================================
-           READ CELEBRANTS
-        ===================================== */
 
         snapshot.forEach(
 
@@ -624,9 +795,6 @@ async function loadCelebrants() {
 
             loading.style.display =
                 "none";
-
-
-            stopSlider();
 
 
             return;
@@ -721,7 +889,23 @@ async function loadCelebrants() {
             );
 
 
-            startSlider();
+            /*
+             * Show swipe instruction briefly.
+             */
+
+            setTimeout(
+
+                function() {
+
+                    swipeHint.classList.add(
+                        "hidden"
+                    );
+
+                },
+
+                3500
+
+            );
 
         } else {
 
@@ -885,6 +1069,32 @@ function createSlide(
         "dot";
 
 
+    dot.addEventListener(
+
+        "click",
+
+        function() {
+
+            const index =
+                dots.indexOf(
+                    dot
+                );
+
+            if (
+                index !== -1
+            ) {
+
+                showSlide(
+                    index
+                );
+
+            }
+
+        }
+
+    );
+
+
     dotsContainer.appendChild(
         dot
     );
@@ -909,12 +1119,39 @@ function showSlide(
     }
 
 
+    if (
+        index < 0
+    ) {
+
+        index =
+            slides.length - 1;
+
+    }
+
+
+    if (
+        index >= slides.length
+    ) {
+
+        index = 0;
+
+    }
+
+
     slides.forEach(
 
         function(slide) {
 
             slide.classList.remove(
                 "active"
+            );
+
+            slide.classList.remove(
+                "previous"
+            );
+
+            slide.classList.remove(
+                "next"
             );
 
         }
@@ -964,13 +1201,10 @@ function showSlide(
 
 
 /* =========================================
-   START SLIDER
+   NEXT SLIDE
 ========================================= */
 
-function startSlider() {
-
-    stopSlider();
-
+function nextSlide() {
 
     if (
         slides.length <= 1
@@ -981,57 +1215,335 @@ function startSlider() {
     }
 
 
-    slideTimer =
-        setInterval(
-
-            function() {
-
-                let next =
-                    currentSlide + 1;
+    let next =
+        currentSlide + 1;
 
 
-                if (
-                    next >= slides.length
-                ) {
+    if (
+        next >= slides.length
+    ) {
 
-                    next = 0;
+        next = 0;
 
-                }
+    }
 
 
-                showSlide(
-                    next
-                );
-
-            },
-
-            4000
-
-        );
+    showSlide(
+        next
+    );
 
 }
 
 
 /* =========================================
-   STOP SLIDER
+   PREVIOUS SLIDE
 ========================================= */
 
-function stopSlider() {
+function previousSlide() {
 
     if (
-        slideTimer
+        slides.length <= 1
     ) {
 
-        clearInterval(
-            slideTimer
-        );
-
-        slideTimer =
-            null;
+        return;
 
     }
 
+
+    let previous =
+        currentSlide - 1;
+
+
+    if (
+        previous < 0
+    ) {
+
+        previous =
+            slides.length - 1;
+
+    }
+
+
+    showSlide(
+        previous
+    );
+
 }
+
+
+/* =========================================
+   TOUCH START
+========================================= */
+
+slider.addEventListener(
+
+    "touchstart",
+
+    function(event) {
+
+        if (
+            event.touches.length !== 1
+        ) {
+
+            return;
+
+        }
+
+
+        startX =
+            event.touches[0].clientX;
+
+
+        currentX =
+            startX;
+
+
+        isDragging =
+            true;
+
+    },
+
+    {
+        passive: true
+    }
+
+);
+
+
+/* =========================================
+   TOUCH MOVE
+========================================= */
+
+slider.addEventListener(
+
+    "touchmove",
+
+    function(event) {
+
+        if (
+            !isDragging
+        ) {
+
+            return;
+
+        }
+
+
+        currentX =
+            event.touches[0].clientX;
+
+    },
+
+    {
+        passive: true
+    }
+
+);
+
+
+/* =========================================
+   TOUCH END
+========================================= */
+
+slider.addEventListener(
+
+    "touchend",
+
+    function() {
+
+        if (
+            !isDragging
+        ) {
+
+            return;
+
+        }
+
+
+        const distance =
+            currentX - startX;
+
+
+        isDragging =
+            false;
+
+
+        /*
+         * Minimum swipe distance.
+         */
+
+        if (
+            Math.abs(distance) < 45
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            distance < 0
+        ) {
+
+            nextSlide();
+
+        } else {
+
+            previousSlide();
+
+        }
+
+    }
+
+);
+
+
+/* =========================================
+   MOUSE DRAG START
+========================================= */
+
+slider.addEventListener(
+
+    "mousedown",
+
+    function(event) {
+
+        startX =
+            event.clientX;
+
+
+        currentX =
+            startX;
+
+
+        isDragging =
+            true;
+
+        dragStarted =
+            true;
+
+
+        event.preventDefault();
+
+    }
+
+);
+
+
+/* =========================================
+   MOUSE MOVE
+========================================= */
+
+window.addEventListener(
+
+    "mousemove",
+
+    function(event) {
+
+        if (
+            !isDragging ||
+            !dragStarted
+        ) {
+
+            return;
+
+        }
+
+
+        currentX =
+            event.clientX;
+
+    }
+
+);
+
+
+/* =========================================
+   MOUSE UP
+========================================= */
+
+window.addEventListener(
+
+    "mouseup",
+
+    function() {
+
+        if (
+            !isDragging
+        ) {
+
+            return;
+
+        }
+
+
+        const distance =
+            currentX - startX;
+
+
+        isDragging =
+            false;
+
+        dragStarted =
+            false;
+
+
+        if (
+            Math.abs(distance) < 45
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            distance < 0
+        ) {
+
+            nextSlide();
+
+        } else {
+
+            previousSlide();
+
+        }
+
+    }
+
+);
+
+
+/* =========================================
+   KEYBOARD CONTROL
+========================================= */
+
+document.addEventListener(
+
+    "keydown",
+
+    function(event) {
+
+        if (
+            event.key === "ArrowLeft"
+        ) {
+
+            previousSlide();
+
+        }
+
+
+        if (
+            event.key === "ArrowRight"
+        ) {
+
+            nextSlide();
+
+        }
+
+    }
+
+);
 
 
 /* =========================================
